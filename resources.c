@@ -17,11 +17,11 @@ bool initializeImages() {
         gameLogo = IMG_LoadTexture(gameRenderer, "images/logo.jpg");
     }
 
-    if (gameLogo) {
-        printf("Logo charge avec succes!\n");
-    } else {
-        printf("Logo non trouve (images/logo.png ou logo.jpg)\n");
-    }
+    if (!gameLogo) printf("Error: logo.png not found!");
+    if (!mainBackground) printf("Error: bg_main.jpg not found!");
+    if (!stoneBackground) printf("Error: bg_stone.jpg not found!");
+    if (!greenBackground) printf("Error: bg_green.jpg not found!");
+    if (!rhinoBackground) printf("Error: bg_rhino.jpg not found!");
 
     return true;
 }

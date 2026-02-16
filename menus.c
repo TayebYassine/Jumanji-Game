@@ -28,6 +28,7 @@ static void handleMainMenuEvents(MenuButton * buttons[], int buttonCount) {
             } else if (buttons[3]->isHovered) {
                 triggerClickSound();
             } else if (buttons[4]->isHovered) {
+                triggerClickSound();
                 activeState = STATE_QUIT;
             }
         } else if (event.type == SDL_KEYDOWN) {
@@ -73,7 +74,7 @@ void displayMainMenu() {
     int mouseX, mouseY;
     SDL_GetMouseState(&mouseX, &mouseY);
 
-    // FIX: Use centralized hover update function to prevent sound spam
+    // Use centralized hover update function to prevent sound spam
     updateButtonHover(allButtons, 5, mouseX, mouseY);
 
     // Render all buttons
@@ -135,6 +136,7 @@ void displayOptionsMenu() {
             activeState = STATE_QUIT;
         } else if (event.type == SDL_MOUSEBUTTONDOWN) {
             if (fullscreenButton.isHovered) {
+                triggerClickSound();
                 isFullscreenMode = !isFullscreenMode;
                 SDL_SetWindowFullscreen(gameWindow, isFullscreenMode ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
             } else if (backButton.isHovered) {
@@ -191,8 +193,10 @@ void displaySaveMenu() {
             activeState = STATE_QUIT;
         } else if (event.type == SDL_MOUSEBUTTONDOWN) {
             if (slot1Button.isHovered || slot2Button.isHovered || slot3Button.isHovered) {
+                triggerClickSound();
                 activeState = STATE_PLAYER_SELECTION;
             } else if (backButton.isHovered) {
+                triggerClickSound();
                 activeState = STATE_MAIN_MENU;
             }
         } else if (event.type == SDL_KEYDOWN) {
@@ -234,8 +238,10 @@ void displayPlayerMenu() {
             activeState = STATE_QUIT;
         } else if (event.type == SDL_MOUSEBUTTONDOWN) {
             if (singlePlayerButton.isHovered || multiPlayerButton.isHovered) {
+                triggerClickSound();
                 activeState = STATE_AVATAR_SELECTION;
             } else if (backButton.isHovered) {
+                triggerClickSound();
                 activeState = STATE_SAVE_SELECTION;
             }
         } else if (event.type == SDL_KEYDOWN) {
@@ -320,8 +326,10 @@ void displayAvatarMenu() {
             else if (mouseButton.isHovered) chosenAvatar = 3;
             else if (rubyButton.isHovered) chosenAvatar = 4;
             else if (confirmButton.isHovered && chosenAvatar != 0) {
+                triggerClickSound();
                 activeState = STATE_HIGH_SCORES;
             } else if (backButton.isHovered) {
+                triggerClickSound();
                 activeState = STATE_PLAYER_SELECTION;
             }
         } else if (event.type == SDL_KEYDOWN) {
@@ -348,7 +356,7 @@ void displayHighScoresMenu() {
     Joueur joueurs[NOMBRE_JOEURS];
     int numPlayers = charger_joueurs_tries("joueurs.bin", joueurs);
 
-    // FIX: Use centralized default loading
+    // Use centralized default loading
     if (numPlayers == 0) {
         loadDefaultPlayers(joueurs);
         numPlayers = NOMBRE_JOEURS;
@@ -389,8 +397,10 @@ void displayHighScoresMenu() {
             activeState = STATE_QUIT;
         } else if (event.type == SDL_MOUSEBUTTONDOWN) {
             if (quitButton.isHovered) {
+                triggerClickSound();
                 activeState = STATE_QUIT;
             } else if (backButton.isHovered) {
+                triggerClickSound();
                 activeState = STATE_MAIN_MENU;
             }
         } else if (event.type == SDL_KEYDOWN) {
@@ -434,10 +444,13 @@ void displayPuzzleMenu() {
             activeState = STATE_QUIT;
         } else if (event.type == SDL_MOUSEBUTTONDOWN) {
             if (quizButton.isHovered) {
+                triggerClickSound();
                 printf("Quiz avec musique suspense!\n");
             } else if (puzzleButton.isHovered) {
+                triggerClickSound();
                 printf("Puzzle!\n");
             } else if (backButton.isHovered) {
+                triggerClickSound();
                 activeState = STATE_HIGH_SCORES;
             }
         } else if (event.type == SDL_KEYDOWN) {

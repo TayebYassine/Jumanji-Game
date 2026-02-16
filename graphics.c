@@ -13,7 +13,6 @@ bool isButtonHovered(MenuButton *btn, int mouseX, int mouseY) {
 }
 
 // Update button hover states and play sound when hover changes
-// FIX: Moved hover sound logic here to prevent spam
 void updateButtonHover(MenuButton *buttons[], int count, int mouseX, int mouseY) {
     bool anyHovered = false;
     MenuButton *currentlyHovered = NULL;
@@ -28,7 +27,7 @@ void updateButtonHover(MenuButton *buttons[], int count, int mouseX, int mouseY)
 
     // Play hover sound only when we start hovering a NEW button
     if (currentlyHovered != NULL && currentlyHovered != lastHoveredButton) {
-        triggerHoverSound();
+        // triggerHoverSound();
     }
 
     // Update the last hovered button

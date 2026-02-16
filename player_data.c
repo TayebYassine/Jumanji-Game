@@ -4,12 +4,14 @@
 #include <stdlib.h>
 #include <time.h>
 
-// FIX: Centralized default player data to avoid duplication
+// Load default values for each player
 void loadDefaultPlayers(Joueur *joueurs) {
     strcpy(joueurs[0].name, "DR. BRAVESTONES");
     joueurs[0].score = 99999;
+
     strcpy(joueurs[1].name, "RUBY ROUNDHOUSE");
     joueurs[1].score = 87500;
+
     strcpy(joueurs[2].name, "MOUSE FINBAR");
     joueurs[2].score = 75000;
 }
@@ -18,11 +20,12 @@ void loadDefaultPlayers(Joueur *joueurs) {
 int comparer_scores(const void *a, const void *b) {
     Joueur *joueurA = (Joueur *) a;
     Joueur *joueurB = (Joueur *) b;
+
     return joueurB->score - joueurA->score;
 }
 
 // Save player data to file
-void sauvegarder_joueurs(const char *filename) {
+void sauvegarder_joueurs(char filename[]) {
     Joueur joueurs[NOMBRE_JOEURS];
     loadDefaultPlayers(joueurs);
 
@@ -54,10 +57,10 @@ void sauvegarder_joueurs(const char *filename) {
 }
 
 // Load player data from file (sorted by score)
-int charger_joueurs_tries(const char *filename, Joueur *joueurs) {
+int charger_joueurs_tries(char filename[], Joueur *joueurs) {
     FILE *file = fopen(filename, "rb");
     if (file == NULL) {
-        // FIX: Use centralized default player data
+        // Use centralized default player data
         loadDefaultPlayers(joueurs);
         return NOMBRE_JOEURS;
     }

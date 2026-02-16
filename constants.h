@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 
-// Window constants
+// Constants
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 768
 #define FPS_DELAY 16

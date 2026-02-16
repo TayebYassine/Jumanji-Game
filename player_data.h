@@ -4,13 +4,12 @@
 #include "types.h"
 #include "constants.h"
 
-// Player data management
 void loadDefaultPlayers(Joueur * joueurs);
 
 int comparer_scores(const void *a, const void *b);
 
-void sauvegarder_joueurs(const char *filename);
+void sauvegarder_joueurs(char filename[]);
 
-int charger_joueurs_tries(const char *filename, Joueur *joueurs);
+int charger_joueurs_tries(char filename[], Joueur *joueurs);
 
 #endif // PLAYER_DATA_H

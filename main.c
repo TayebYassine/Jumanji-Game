@@ -38,7 +38,7 @@ bool initializeSDL() {
 
 // Create game window and renderer
 bool createWindow() {
-    gameWindow = SDL_CreateWindow("JUMANJI 2017",
+    gameWindow = SDL_CreateWindow("JUMANJI",
                                   SDL_WINDOWPOS_CENTERED,
                                   SDL_WINDOWPOS_CENTERED,
                                   WINDOW_WIDTH, WINDOW_HEIGHT,
