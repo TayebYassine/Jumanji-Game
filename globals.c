@@ -28,3 +28,9 @@ int chosenAvatar = 0;
 
 // Hover tracking (fixed hover sound spam bug)
 MenuButton *lastHoveredButton = NULL;
+
+// Particle system
+Particle leaves[30];
+bool particlesInitialized = false;
+Uint32 introStartTime = 0;
+bool introInitialized = false;

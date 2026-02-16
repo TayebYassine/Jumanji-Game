@@ -6,6 +6,7 @@
 
 // Game states
 typedef enum {
+    STATE_INTRO,
     STATE_MAIN_MENU,
     STATE_OPTIONS_MENU,
     STATE_SAVE_SELECTION,
@@ -13,6 +14,7 @@ typedef enum {
     STATE_AVATAR_SELECTION,
     STATE_HIGH_SCORES,
     STATE_PUZZLE_GAME,
+    STATE_QUIZ_GAME,
     STATE_QUIT
 } GameState;
 
@@ -28,5 +30,12 @@ typedef struct {
     char name[64];
     int score;
 } Joueur;
+
+// Animation
+typedef struct {
+    float x, y, speed, rotation;
+    int size;
+    int type; // 0 = leaf, 1 = petal
+} Particle;
 
 #endif // TYPES_H

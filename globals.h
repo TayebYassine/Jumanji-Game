@@ -35,4 +35,10 @@ extern int chosenAvatar;
 // Static variable for hover tracking (fixed hover sound spam bug)
 extern MenuButton *lastHoveredButton;
 
+// Particle system
+extern Particle leaves[30];
+extern bool particlesInitialized;
+extern Uint32 introStartTime;
+extern bool introInitialized;
+
 #endif // GLOBALS_H

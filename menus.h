@@ -16,4 +16,8 @@ void displayHighScoresMenu();
 
 void displayPuzzleMenu();
 
+void displayIntroAnimation();
+
+void displayQuizMenu();
+
 #endif // MENUS_H

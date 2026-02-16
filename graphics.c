@@ -3,6 +3,8 @@
 #include "constants.h"
 #include "audio.h"
 #include <SDL2/SDL_ttf.h>
+#include <math.h>
+#include <stdlib.h>
 
 // Check if mouse is hovering over a button
 bool isButtonHovered(MenuButton *btn, int mouseX, int mouseY) {
@@ -110,5 +112,104 @@ void renderGameLogo(int x, int y, int width, int height) {
     if (gameLogo) {
         SDL_Rect logoRect = {x, y, width, height};
         SDL_RenderCopy(gameRenderer, gameLogo, NULL, &logoRect);
+    }
+}
+
+// Initialize particle system
+void initParticles() {
+    if (particlesInitialized) return;
+
+    for (int i = 0; i < 30; i++) {
+        leaves[i].x = rand() % WINDOW_WIDTH;
+        leaves[i].y = rand() % WINDOW_HEIGHT;
+        leaves[i].speed = 0.5 + (rand() % 20) / 10.0;
+        leaves[i].rotation = rand() % 360;
+        leaves[i].size = 8 + rand() % 8;
+        leaves[i].type = rand() % 2;
+    }
+
+    particlesInitialized = true;
+}
+
+// Draw animated falling particles
+void drawParticles() {
+    if (!gameRenderer) return;
+
+    initParticles();
+
+    for (int i = 0; i < 30; i++) {
+        // Color based on type
+        if (leaves[i].type == 0) {
+            // Green jungle
+            SDL_SetRenderDrawColor(gameRenderer, 34 + rand() % 50, 139 + rand() % 50, 34, 200);
+        } else {
+            // Gold
+            SDL_SetRenderDrawColor(gameRenderer, 218, 165, 32, 180);
+        }
+
+        // Rotate leaves
+        leaves[i].rotation += 2;
+        float rad = leaves[i].rotation * 3.14159f / 180.0f;
+
+        // Draw leaf (oval shape)
+        for (int fy = -leaves[i].size / 2; fy < leaves[i].size / 2; fy++) {
+            for (int fx = -leaves[i].size / 3; fx < leaves[i].size / 3; fx++) {
+                // Rotation
+                int rx = (int) (fx * cos(rad) - fy * sin(rad));
+                int ry = (int) (fx * sin(rad) + fy * cos(rad));
+
+                int px = (int) leaves[i].x + rx;
+                int py = (int) leaves[i].y + ry;
+
+                if (px >= 0 && px < WINDOW_WIDTH && py >= 0 && py < WINDOW_HEIGHT) {
+                    SDL_RenderDrawPoint(gameRenderer, px, py);
+                }
+            }
+        }
+
+        // Falling movement with oscillation
+        leaves[i].y += leaves[i].speed;
+        leaves[i].x += sin(leaves[i].y / 50.0) * 1.5;
+
+        // Reset if off screen
+        if (leaves[i].y > WINDOW_HEIGHT + 20) {
+            leaves[i].y = -20;
+            leaves[i].x = rand() % WINDOW_WIDTH;
+        }
+        if (leaves[i].x < -20) leaves[i].x = WINDOW_WIDTH + 20;
+        if (leaves[i].x > WINDOW_WIDTH + 20) leaves[i].x = -20;
+    }
+}
+
+// Draw text with typing animation effect
+void drawTypingText(const char *text, int x, int y, SDL_Color textColor, bool useLargeFont, Uint32 startTime,
+                    int delayMs) {
+    if (!normalFont || !gameRenderer || !text) return;
+
+    static char buffer[256];
+    int len = strlen(text);
+
+    // Calculate how many letters to show
+    Uint32 elapsed = SDL_GetTicks() - startTime;
+    int charsToShow = elapsed / delayMs;
+
+    if (charsToShow > len) charsToShow = len;
+
+    // Copy letters to show
+    strncpy(buffer, text, charsToShow);
+    buffer[charsToShow] = '\0';
+
+    // Draw text
+    renderText(buffer, x, y, textColor, useLargeFont);
+
+    // Blinking cursor
+    if (charsToShow < len && (elapsed / 500) % 2 == 0) {
+        int textW, textH;
+        TTF_Font *f = useLargeFont ? largeFont : normalFont;
+        TTF_SizeText(f, buffer, &textW, &textH);
+
+        SDL_Rect cursor = {x + textW + 5, y + 5, 3, textH - 10};
+        SDL_SetRenderDrawColor(gameRenderer, textColor.r, textColor.g, textColor.b, 255);
+        SDL_RenderFillRect(gameRenderer, &cursor);
     }
 }

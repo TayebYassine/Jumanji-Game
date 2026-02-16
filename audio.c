@@ -26,31 +26,24 @@ bool initializeSounds() {
 // Update background music based on current game state
 void refreshBackgroundMusic() {
     static GameState previousState = -1;
-    static Mix_Music* currentlyPlaying = NULL;
+    static Mix_Music *currentlyPlaying = NULL;
 
     if (activeState == previousState) return;
     previousState = activeState;
 
     // Determine which music should be playing for the current state
-    Mix_Music* targetMusic = NULL;
+    Mix_Music *targetMusic = NULL;
 
     if (activeState == STATE_MAIN_MENU ||
         activeState == STATE_SAVE_SELECTION ||
         activeState == STATE_PLAYER_SELECTION ||
-        activeState == STATE_AVATAR_SELECTION)
-    {
+        activeState == STATE_AVATAR_SELECTION) {
         targetMusic = mainTheme;
-    }
-    else if (activeState == STATE_OPTIONS_MENU)
-    {
+    } else if (activeState == STATE_OPTIONS_MENU) {
         targetMusic = optionsTheme ? optionsTheme : mainTheme;
-    }
-    else if (activeState == STATE_HIGH_SCORES)
-    {
+    } else if (activeState == STATE_HIGH_SCORES) {
         targetMusic = victoryTheme ? victoryTheme : mainTheme;
-    }
-    else if (activeState == STATE_PUZZLE_GAME)
-    {
+    } else if (activeState == STATE_PUZZLE_GAME) {
         targetMusic = mainTheme;
     }
 

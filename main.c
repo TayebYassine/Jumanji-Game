@@ -65,6 +65,9 @@ void runGameLoop() {
         SDL_RenderClear(gameRenderer);
 
         switch (activeState) {
+            case STATE_INTRO:
+                displayIntroAnimation();
+                break;
             case STATE_MAIN_MENU:
                 displayMainMenu();
                 break;
@@ -85,6 +88,9 @@ void runGameLoop() {
                 break;
             case STATE_PUZZLE_GAME:
                 displayPuzzleMenu();
+                break;
+            case STATE_QUIZ_GAME:
+                displayQuizMenu();
                 break;
             default:
                 break;
@@ -135,6 +141,9 @@ int main(int argc, char *argv[]) {
 
     // Initialize player data
     sauvegarder_joueurs("joueurs.bin");
+
+    // Intro
+    activeState = STATE_INTRO;
 
     // Run main game loop
     runGameLoop();

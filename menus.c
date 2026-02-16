@@ -9,9 +9,10 @@
 #include <SDL2/SDL_mixer.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 // Handle main menu events
-static void handleMainMenuEvents(MenuButton* buttons[]) {
+static void handleMainMenuEvents(MenuButton *buttons[]) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
@@ -50,6 +51,9 @@ void displayMainMenu() {
         SDL_SetRenderDrawColor(gameRenderer, 34, 139, 34, 255);
         SDL_RenderClear(gameRenderer);
     }
+
+    // Particles
+    drawParticles();
 
     // Logo and title
     int logoXPos = 50;
@@ -451,7 +455,7 @@ void displayPuzzleMenu() {
         } else if (event.type == SDL_MOUSEBUTTONDOWN) {
             if (quizButton.isHovered) {
                 triggerClickSound();
-                printf("Quiz avec musique suspense!\n");
+                activeState = STATE_QUIZ_GAME;
             } else if (puzzleButton.isHovered) {
                 triggerClickSound();
                 printf("Puzzle!\n");
@@ -462,6 +466,101 @@ void displayPuzzleMenu() {
         } else if (event.type == SDL_KEYDOWN) {
             if (event.key.keysym.sym == SDLK_ESCAPE) {
                 activeState = STATE_HIGH_SCORES;
+            }
+        }
+    }
+}
+
+// Intro animation screen
+void displayIntroAnimation() {
+    if (!introInitialized) {
+        introStartTime = SDL_GetTicks();
+        introInitialized = true;
+    }
+
+    // Black background
+    SDL_SetRenderDrawColor(gameRenderer, 0, 0, 0, 255);
+    SDL_RenderClear(gameRenderer);
+
+    Uint32 elapsed = SDL_GetTicks() - introStartTime;
+
+    SDL_Color gold = {255, 215, 0, 255};
+
+    // Phase 1: "BIENVENUE" (0-2 seconds)
+    if (elapsed < 2000) {
+        drawTypingText("BIENVENUE", WINDOW_WIDTH / 2 - 150, WINDOW_HEIGHT / 2 - 50, gold, true, introStartTime, 150);
+    }
+    // Phase 2: "DANS" (2-3 seconds)
+    else if (elapsed < 3000) {
+        renderText("BIENVENUE", WINDOW_WIDTH / 2 - 150, WINDOW_HEIGHT / 2 - 50, gold, true);
+        drawTypingText("DANS", WINDOW_WIDTH / 2 - 40, WINDOW_HEIGHT / 2 + 20, colorWhite, false, introStartTime + 2000,
+                       200);
+    }
+    // Phase 3: "JUMANJI" (3-5 seconds)
+    else if (elapsed < 5000) {
+        renderText("BIENVENUE", WINDOW_WIDTH / 2 - 150, WINDOW_HEIGHT / 2 - 50, gold, true);
+        renderText("DANS", WINDOW_WIDTH / 2 - 40, WINDOW_HEIGHT / 2 + 20, colorWhite, false);
+        drawTypingText("JUMANJI", WINDOW_WIDTH / 2 - 180, WINDOW_HEIGHT / 2 + 60, gold, true, introStartTime + 3000,
+                       100);
+    }
+    // Phase 4: Wait for click or key
+    else {
+        renderText("BIENVENUE", WINDOW_WIDTH / 2 - 150, WINDOW_HEIGHT / 2 - 50, gold, true);
+        renderText("DANS", WINDOW_WIDTH / 2 - 40, WINDOW_HEIGHT / 2 + 20, colorWhite, false);
+        renderText("JUMANJI", WINDOW_WIDTH / 2 - 180, WINDOW_HEIGHT / 2 + 60, gold, true);
+
+        // Blinking "Press any key"
+        if ((elapsed / 800) % 2 == 0) {
+            renderText("Appuyez sur une touche...", WINDOW_WIDTH / 2 - 180, WINDOW_HEIGHT / 2 + 150, colorWhite, false);
+        }
+    }
+
+    // Handle events
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT) {
+            activeState = STATE_QUIT;
+        }
+        if ((event.type == SDL_KEYDOWN || event.type == SDL_MOUSEBUTTONDOWN) && elapsed > 1000) {
+            activeState = STATE_MAIN_MENU;
+            introInitialized = false; // Reset for next time
+        }
+    }
+}
+
+// Quiz menu (placeholder - can be expanded)
+void displayQuizMenu() {
+    if (rhinoBackground) {
+        SDL_RenderCopy(gameRenderer, rhinoBackground, NULL, NULL);
+    } else {
+        SDL_SetRenderDrawColor(gameRenderer, 105, 105, 105, 255);
+        SDL_RenderClear(gameRenderer);
+    }
+
+    renderText("QUIZ JUMANJI", 400, 150, colorGreen, true);
+    renderText("(En construction...)", 350, 250, colorWhite, false);
+
+    MenuButton backButton = {{800, 650, 150, 50}, "RETOUR", false};
+
+    int mouseX, mouseY;
+    SDL_GetMouseState(&mouseX, &mouseY);
+
+    MenuButton *buttons[] = {&backButton};
+    updateButtonHover(buttons, 1, mouseX, mouseY);
+
+    renderButton(&backButton);
+
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT) {
+            activeState = STATE_QUIT;
+        } else if (event.type == SDL_MOUSEBUTTONDOWN) {
+            if (backButton.isHovered) {
+                activeState = STATE_PUZZLE_GAME;
+            }
+        } else if (event.type == SDL_KEYDOWN) {
+            if (event.key.keysym.sym == SDLK_ESCAPE) {
+                activeState = STATE_PUZZLE_GAME;
             }
         }
     }
