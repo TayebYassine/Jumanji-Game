@@ -150,16 +150,16 @@ void displayOptionsMenu() {
             if (event.key.keysym.sym == SDLK_ESCAPE) {
                 activeState = STATE_MAIN_MENU;
             } else if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_RIGHT) {
-                if (musicVolume < 100) {
-                    musicVolume += 5;
+                if (musicVolume < 128) {
+                    musicVolume += 7;
 
-                    if (musicVolume > 100) musicVolume = 100;
+                    if (musicVolume > 128) musicVolume = 128;
 
                     Mix_VolumeMusic(musicVolume);
                 }
             } else if (event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_LEFT) {
                 if (musicVolume > 0) {
-                    musicVolume -= 5;
+                    musicVolume -= 7;
 
                     if (musicVolume < 0) musicVolume = 0;
 

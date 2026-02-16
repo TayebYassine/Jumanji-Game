@@ -22,7 +22,7 @@ Mix_Chunk *clickSound = NULL;
 
 // Game state variables
 GameState activeState = STATE_MAIN_MENU;
-int musicVolume = 50;
+int musicVolume = 64;
 bool isFullscreenMode = false;
 int chosenAvatar = 0;
 
