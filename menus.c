@@ -8,9 +8,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 #include <stdio.h>
+#include <string.h>
 
 // Handle main menu events
-static void handleMainMenuEvents(MenuButton * buttons[], int buttonCount) {
+static void handleMainMenuEvents(MenuButton* buttons[]) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
@@ -27,6 +28,7 @@ static void handleMainMenuEvents(MenuButton * buttons[], int buttonCount) {
                 activeState = STATE_HIGH_SCORES;
             } else if (buttons[3]->isHovered) {
                 triggerClickSound();
+                activeState = STATE_PUZZLE_GAME;
             } else if (buttons[4]->isHovered) {
                 triggerClickSound();
                 activeState = STATE_QUIT;
@@ -82,7 +84,7 @@ void displayMainMenu() {
         renderButton(allButtons[i]);
     }
 
-    handleMainMenuEvents(allButtons, 5);
+    handleMainMenuEvents(allButtons);
 }
 
 // Options menu display
@@ -115,10 +117,8 @@ void displayOptionsMenu() {
     renderText(volumeLabel, sliderX, sliderY - 40, colorWhite, false);
 
     // Fullscreen button
-    MenuButton fullscreenButton = {
-        {300, 300, 400, 60},
-        isFullscreenMode ? "PLEIN ECRAN: OUI" : "PLEIN ECRAN: NON", false
-    };
+    MenuButton fullscreenButton = {{300, 300, 400, 60}, "", false};
+    strcpy(fullscreenButton.label, isFullscreenMode ? "PLEIN ECRAN: OUI" : "PLEIN ECRAN: NON");
     MenuButton backButton = {{800, 650, 150, 50}, "RETOUR", false};
 
     int mouseX, mouseY;
@@ -146,13 +146,19 @@ void displayOptionsMenu() {
             if (event.key.keysym.sym == SDLK_ESCAPE) {
                 activeState = STATE_MAIN_MENU;
             } else if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_RIGHT) {
-                if (musicVolume < 128) {
+                if (musicVolume < 100) {
                     musicVolume += 5;
+
+                    if (musicVolume > 100) musicVolume = 100;
+
                     Mix_VolumeMusic(musicVolume);
                 }
             } else if (event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_LEFT) {
                 if (musicVolume > 0) {
                     musicVolume -= 5;
+
+                    if (musicVolume < 0) musicVolume = 0;
+
                     Mix_VolumeMusic(musicVolume);
                 }
             }

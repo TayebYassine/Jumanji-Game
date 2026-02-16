@@ -47,7 +47,11 @@ void refreshBackgroundMusic() {
     }
     else if (activeState == STATE_HIGH_SCORES)
     {
-        targetMusic = victoryTheme;
+        targetMusic = victoryTheme ? victoryTheme : mainTheme;
+    }
+    else if (activeState == STATE_PUZZLE_GAME)
+    {
+        targetMusic = mainTheme;
     }
 
     // Only change music if we're switching to a different track
