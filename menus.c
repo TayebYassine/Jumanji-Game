@@ -196,7 +196,7 @@ void displayOptionsMenu() {
         } else if (event.type == SDL_KEYDOWN) {
             if (event.key.keysym.sym == SDLK_ESCAPE) {
                 activeState = STATE_MAIN_MENU;
-            } else if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_RIGHT) {
+            } else if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_PLUS) {
                 if (musicVolume < 128) {
                     musicVolume += 7;
 
@@ -204,7 +204,7 @@ void displayOptionsMenu() {
 
                     Mix_VolumeMusic(musicVolume);
                 }
-            } else if (event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_LEFT) {
+            } else if (event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_MINUS) {
                 if (musicVolume > 0) {
                     musicVolume -= 7;
 
