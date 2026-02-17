@@ -404,8 +404,8 @@ void displayAvatarMenu() {
 
 // High scores menu
 void displayHighScoresMenu() {
-    if (greenBackground) {
-        SDL_RenderCopy(gameRenderer, greenBackground, NULL, NULL);
+    if (goldBackground) {
+        SDL_RenderCopy(gameRenderer, goldBackground, NULL, NULL);
     } else {
         SDL_SetRenderDrawColor(gameRenderer, 218, 165, 32, 255);
         SDL_RenderClear(gameRenderer);

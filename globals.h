@@ -15,7 +15,7 @@ extern TTF_Font *largeFont;
 // Texture resources
 extern SDL_Texture *mainBackground;
 extern SDL_Texture *stoneBackground;
-extern SDL_Texture *greenBackground;
+extern SDL_Texture *goldBackground;
 extern SDL_Texture *rhinoBackground;
 extern SDL_Texture *gameLogo;
 

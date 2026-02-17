@@ -9,7 +9,7 @@ TTF_Font *largeFont = NULL;
 // Texture resources
 SDL_Texture *mainBackground = NULL;
 SDL_Texture *stoneBackground = NULL;
-SDL_Texture *greenBackground = NULL;
+SDL_Texture *goldBackground = NULL;
 SDL_Texture *rhinoBackground = NULL;
 SDL_Texture *gameLogo = NULL;
 

@@ -7,10 +7,10 @@
 
 // Load all image resources
 bool initializeImages() {
-    mainBackground = IMG_LoadTexture(gameRenderer, "images/bg_main.jpg");
-    stoneBackground = IMG_LoadTexture(gameRenderer, "images/bg_stone.jpg");
-    greenBackground = IMG_LoadTexture(gameRenderer, "images/bg_green.jpg");
-    rhinoBackground = IMG_LoadTexture(gameRenderer, "images/bg_rhino.jpg");
+    mainBackground = IMG_LoadTexture(gameRenderer, "images/bg_main.jpeg");
+    stoneBackground = IMG_LoadTexture(gameRenderer, "images/bg_stone.jpeg");
+    goldBackground = IMG_LoadTexture(gameRenderer, "images/bg_gold.jpeg");
+    rhinoBackground = IMG_LoadTexture(gameRenderer, "images/bg_rhino.jpeg");
 
     gameLogo = IMG_LoadTexture(gameRenderer, "images/logo.png");
     if (!gameLogo) {
@@ -18,10 +18,10 @@ bool initializeImages() {
     }
 
     if (!gameLogo) printf("Error: logo.png not found!\n");
-    if (!mainBackground) printf("Error: bg_main.jpg not found!\n");
-    if (!stoneBackground) printf("Error: bg_stone.jpg not found!\n");
-    if (!greenBackground) printf("Error: bg_green.jpg not found!\n");
-    if (!rhinoBackground) printf("Error: bg_rhino.jpg not found!\n");
+    if (!mainBackground) printf("Error: bg_main.jpeg not found!\n");
+    if (!stoneBackground) printf("Error: bg_stone.jpeg not found!\n");
+    if (!goldBackground) printf("Error: bg_gold.jpeg not found!\n");
+    if (!rhinoBackground) printf("Error: bg_rhino.jpeg not found!\n");
 
     return true;
 }
@@ -49,7 +49,7 @@ void cleanupResources() {
     // Cleanup textures
     if (mainBackground) SDL_DestroyTexture(mainBackground);
     if (stoneBackground) SDL_DestroyTexture(stoneBackground);
-    if (greenBackground) SDL_DestroyTexture(greenBackground);
+    if (goldBackground) SDL_DestroyTexture(goldBackground);
     if (rhinoBackground) SDL_DestroyTexture(rhinoBackground);
     if (gameLogo) SDL_DestroyTexture(gameLogo);
 
@@ -63,7 +63,7 @@ void cleanupResources() {
     // Reset pointers
     mainBackground = NULL;
     stoneBackground = NULL;
-    greenBackground = NULL;
+    goldBackground = NULL;
     rhinoBackground = NULL;
     gameLogo = NULL;
     normalFont = NULL;
