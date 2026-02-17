@@ -51,7 +51,7 @@ void renderButton(MenuButton *btn) {
     SDL_RenderDrawRect(gameRenderer, &btn->bounds);
 
     if (normalFont) {
-        SDL_Color textColor = btn->isHovered ? colorGreen : colorWhite;
+        SDL_Color textColor = btn->isHovered ? colorGold : colorWhite;
         SDL_Surface *textSurface = TTF_RenderText_Blended(normalFont, btn->label, textColor);
 
         if (textSurface) {

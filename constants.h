@@ -12,6 +12,7 @@
 // Global colors
 extern SDL_Color colorWhite;
 extern SDL_Color colorGreen;
+extern SDL_Color colorGold;
 extern SDL_Color colorBlack;
 
 #endif // CONSTANTS_H
