@@ -65,35 +65,30 @@ void runGameLoop() {
         SDL_RenderClear(gameRenderer);
 
         switch (activeState) {
-            case STATE_INTRO:
-                displayIntroAnimation();
+            case STATE_INTRO: displayIntroAnimation();
                 break;
-            case STATE_MAIN_MENU:
-                displayMainMenu();
+            case STATE_MAIN_MENU: displayMainMenu();
                 break;
-            case STATE_OPTIONS_MENU:
-                displayOptionsMenu();
+            case STATE_OPTIONS_MENU: displayOptionsMenu();
                 break;
-            case STATE_SAVE_SELECTION:
-                displaySaveMenu();
+            case STATE_SAVE_MENU: displaySaveMenu();
                 break;
-            case STATE_PLAYER_SELECTION:
-                displayPlayerMenu();
+            case STATE_SAVE_SELECTION: displaySaveSlotsMenu();
                 break;
-            case STATE_AVATAR_SELECTION:
-                displayAvatarMenu();
+            case STATE_PLAYER_SELECTION: displayPlayerMenu();
                 break;
-            case STATE_HIGH_SCORES:
-                displayHighScoresMenu();
+            case STATE_AVATAR_SELECTION: displayAvatarMenu();
+                break;
+            case STATE_HIGH_SCORES: displayHighScoresMenu();
                 break;
             case STATE_PUZZLE_GAME:
+                resetQuiz();
                 displayPuzzleMenu();
                 break;
             case STATE_QUIZ_GAME:
                 displayQuizMenu();
                 break;
-            default:
-                break;
+            default: break;
         }
 
         SDL_RenderPresent(gameRenderer);

@@ -20,7 +20,7 @@ void handleMainMenuEvents(MenuButton *buttons[]) {
         } else if (event.type == SDL_MOUSEBUTTONDOWN) {
             if (buttons[0]->isHovered) {
                 triggerClickSound();
-                activeState = STATE_SAVE_SELECTION;
+                activeState = STATE_SAVE_MENU;
             } else if (buttons[1]->isHovered) {
                 triggerClickSound();
                 activeState = STATE_OPTIONS_MENU;
@@ -37,6 +37,53 @@ void handleMainMenuEvents(MenuButton *buttons[]) {
         } else if (event.type == SDL_KEYDOWN) {
             if (event.key.keysym.sym == SDLK_ESCAPE) {
                 activeState = STATE_QUIT;
+            }
+        }
+    }
+}
+
+void displaySaveSlotsMenu() {
+    if (stoneBackground) {
+        SDL_RenderCopy(gameRenderer, stoneBackground, NULL, NULL);
+    } else {
+        SDL_SetRenderDrawColor(gameRenderer, 101, 67, 33, 255);
+        SDL_RenderClear(gameRenderer);
+    }
+
+    renderText("CHOISISSEZ UN EMPLACEMENT", 250, 50, colorGreen, true);
+
+    MenuButton slot1Button = {{300, 200, 400, 80}, "PARTIE 1 - NOUVELLE PARTIE", false};
+    MenuButton slot2Button = {{300, 320, 400, 80}, "PARTIE 2 - NOUVELLE PARTIE", false};
+    MenuButton slot3Button = {{300, 440, 400, 80}, "PARTIE 3 - NOUVELLE PARTIE", false};
+    MenuButton backButton = {{800, 650, 150, 50}, "RETOUR", false};
+
+    int mouseX, mouseY;
+    SDL_GetMouseState(&mouseX, &mouseY);
+
+    MenuButton *buttons[] = {&slot1Button, &slot2Button, &slot3Button, &backButton};
+    updateButtonHover(buttons, 4, mouseX, mouseY);
+
+    renderButton(&slot1Button);
+    renderButton(&slot2Button);
+    renderButton(&slot3Button);
+    renderButton(&backButton);
+
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT) {
+            activeState = STATE_QUIT;
+        } else if (event.type == SDL_MOUSEBUTTONDOWN) {
+            if (slot1Button.isHovered || slot2Button.isHovered || slot3Button.isHovered) {
+                triggerClickSound();
+                sauvegarder_joueurs("joueurs.bin");
+                activeState = STATE_PLAYER_SELECTION;
+            } else if (backButton.isHovered) {
+                triggerClickSound();
+                activeState = STATE_SAVE_MENU;
+            }
+        } else if (event.type == SDL_KEYDOWN) {
+            if (event.key.keysym.sym == SDLK_ESCAPE) {
+                activeState = STATE_SAVE_MENU;
             }
         }
     }
@@ -179,22 +226,20 @@ void displaySaveMenu() {
         SDL_RenderClear(gameRenderer);
     }
 
-    renderText("CHOISISSEZ UNE SAUVEGARDE", 250, 50, colorGreen, true);
+    renderText("VOULEZ-VOUS SAUVEGARDER?", 250, 200, colorGreen, true);
 
-    MenuButton slot1Button = {{300, 200, 400, 80}, "PARTIE 1 - NOUVELLE PARTIE", false};
-    MenuButton slot2Button = {{300, 320, 400, 80}, "PARTIE 2 - NOUVELLE PARTIE", false};
-    MenuButton slot3Button = {{300, 440, 400, 80}, "PARTIE 3 - NOUVELLE PARTIE", false};
+    MenuButton ouiButton = {{300, 400, 150, 60}, "OUI", false};
+    MenuButton nonButton = {{550, 400, 150, 60}, "NON", false};  // BUG FIX: added missing {
     MenuButton backButton = {{800, 650, 150, 50}, "RETOUR", false};
 
     int mouseX, mouseY;
     SDL_GetMouseState(&mouseX, &mouseY);
 
-    MenuButton *buttons[] = {&slot1Button, &slot2Button, &slot3Button, &backButton};
-    updateButtonHover(buttons, 4, mouseX, mouseY);
+    MenuButton *buttons[] = {&ouiButton, &nonButton, &backButton};
+    updateButtonHover(buttons, 3, mouseX, mouseY);
 
-    renderButton(&slot1Button);
-    renderButton(&slot2Button);
-    renderButton(&slot3Button);
+    renderButton(&ouiButton);
+    renderButton(&nonButton);
     renderButton(&backButton);
 
     SDL_Event event;
@@ -202,7 +247,10 @@ void displaySaveMenu() {
         if (event.type == SDL_QUIT) {
             activeState = STATE_QUIT;
         } else if (event.type == SDL_MOUSEBUTTONDOWN) {
-            if (slot1Button.isHovered || slot2Button.isHovered || slot3Button.isHovered) {
+            if (ouiButton.isHovered) {
+                triggerClickSound();
+                activeState = STATE_SAVE_SELECTION;
+            } else if (nonButton.isHovered) {
                 triggerClickSound();
                 activeState = STATE_PLAYER_SELECTION;
             } else if (backButton.isHovered) {
@@ -210,7 +258,9 @@ void displaySaveMenu() {
                 activeState = STATE_MAIN_MENU;
             }
         } else if (event.type == SDL_KEYDOWN) {
-            if (event.key.keysym.sym == SDLK_ESCAPE) {
+            if (event.key.keysym.sym == SDLK_n) {
+                activeState = STATE_PLAYER_SELECTION;
+            } else if (event.key.keysym.sym == SDLK_ESCAPE) {
                 activeState = STATE_MAIN_MENU;
             }
         }
@@ -528,40 +578,88 @@ void displayIntroAnimation() {
     }
 }
 
-// Quiz menu (placeholder - can be expanded)
 void displayQuizMenu() {
-    if (rhinoBackground) {
-        SDL_RenderCopy(gameRenderer, rhinoBackground, NULL, NULL);
-    } else {
-        SDL_SetRenderDrawColor(gameRenderer, 105, 105, 105, 255);
-        SDL_RenderClear(gameRenderer);
+    SDL_SetRenderDrawColor(gameRenderer, 20, 20, 30, 255);
+    SDL_RenderClear(gameRenderer);
+
+    // BUG FIX: load once, not every frame
+    if (!quizMusicStarted) {
+        Mix_HaltMusic();
+        if (!suspenseMusic) {
+            suspenseMusic = Mix_LoadMUS("sounds/suspense_drums.mp3");
+        }
+        if (suspenseMusic) Mix_PlayMusic(suspenseMusic, -1);
+        quizMusicStarted = true;
     }
 
-    renderText("QUIZ JUMANJI", 400, 150, colorGreen, true);
-    renderText("(En construction...)", 350, 250, colorWhite, false);
+    renderText("QUIZ JUMANJI", WINDOW_WIDTH / 2 - 150, 50, colorGreen, true);
 
-    MenuButton backButton = {{800, 650, 150, 50}, "RETOUR", false};
+    // Question band
+    SDL_Rect questionBand = {100, 150, WINDOW_WIDTH - 200, 100};
+    SDL_SetRenderDrawColor(gameRenderer, 0, 0, 0, 200);
+    SDL_RenderFillRect(gameRenderer, &questionBand);
+    SDL_SetRenderDrawColor(gameRenderer, 255, 215, 0, 255);
+    SDL_RenderDrawRect(gameRenderer, &questionBand);
+
+    renderText(questions[currentQuestion].question, 120, 185, colorWhite, false);
+
+    MenuButton rep1Button = {{200, 300, 600, 60}, "", false};
+    MenuButton rep2Button = {{200, 380, 600, 60}, "", false};
+    MenuButton rep3Button = {{200, 460, 600, 60}, "", false};
+    strcpy(rep1Button.label, questions[currentQuestion].reponses[0]);
+    strcpy(rep2Button.label, questions[currentQuestion].reponses[1]);
+    strcpy(rep3Button.label, questions[currentQuestion].reponses[2]);
 
     int mouseX, mouseY;
     SDL_GetMouseState(&mouseX, &mouseY);
 
-    MenuButton *buttons[] = {&backButton};
-    updateButtonHover(buttons, 1, mouseX, mouseY);
+    MenuButton *buttons[] = {&rep1Button, &rep2Button, &rep3Button};
+    updateButtonHover(buttons, 3, mouseX, mouseY);
 
-    renderButton(&backButton);
+    renderButton(&rep1Button);
+    renderButton(&rep2Button);
+    renderButton(&rep3Button);
+
+    char scoreText[32];
+    sprintf(scoreText, "Score: %d/%d", scoreQuiz, currentQuestion + 1);
+    renderText(scoreText, 800, 600, colorGold, false);
 
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
+            quizMusicStarted = false;
+            Mix_HaltMusic();
             activeState = STATE_QUIT;
         } else if (event.type == SDL_MOUSEBUTTONDOWN) {
-            if (backButton.isHovered) {
-                activeState = STATE_PUZZLE_GAME;
+            int reponseChoisie = -1;
+            if (rep1Button.isHovered) reponseChoisie = 0;
+            else if (rep2Button.isHovered) reponseChoisie = 1;
+            else if (rep3Button.isHovered) reponseChoisie = 2;
+
+            if (reponseChoisie != -1) {
+                triggerClickSound();
+                if (reponseChoisie == questions[currentQuestion].bonneReponse) {
+                    scoreQuiz++;
+                }
+                currentQuestion++;
+                if (currentQuestion >= 4) {
+                    resetQuiz();
+                    Mix_HaltMusic();
+                    activeState = STATE_PUZZLE_GAME;
+                }
             }
         } else if (event.type == SDL_KEYDOWN) {
             if (event.key.keysym.sym == SDLK_ESCAPE) {
-                activeState = STATE_PUZZLE_GAME;
+                quizMusicStarted = false;
+                Mix_HaltMusic();
+                activeState = STATE_QUIT;
             }
         }
     }
+}
+
+void resetQuiz() {
+    currentQuestion = 0;
+    scoreQuiz = 0;
+    quizMusicStarted = false;
 }
