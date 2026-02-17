@@ -28,12 +28,12 @@ bool initializeImages() {
 
 // Load font resources
 bool initializeFonts() {
-    normalFont = TTF_OpenFont("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 24);
-    largeFont = TTF_OpenFont("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 48);
+    normalFont = TTF_OpenFont("font/JetBrainsMono.ttf", 24);
+    largeFont = TTF_OpenFont("font/JetBrainsMono.ttf", 48);
 
     if (!normalFont) {
-        normalFont = TTF_OpenFont("/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf", 24);
-        largeFont = TTF_OpenFont("/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf", 48);
+        normalFont = TTF_OpenFont("font/JetBrainsMono.ttf", 24);
+        largeFont = TTF_OpenFont("font/JetBrainsMono.ttf", 48);
     }
 
     if (!normalFont) {
