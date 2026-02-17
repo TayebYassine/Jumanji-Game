@@ -14,13 +14,13 @@ bool initializeSounds() {
     if (mainTheme) {
         Mix_PlayMusic(mainTheme, -1);
     } else {
-        printf("Error: menu_music.mp3 not found!");
+        printf("Error: menu_music.mp3 not found!\n");
     }
 
-    if (!optionsTheme) printf("Error: options_music.mp3 not found!");
-    if (!victoryTheme) printf("Error: victory_music.mp3 not found!");
-    if (!hoverSound) printf("Error: hover.wav not found!");
-    if (!clickSound) printf("Error: click.mp3 not found!");
+    if (!optionsTheme) printf("Error: options_music.mp3 not found!\n");
+    if (!victoryTheme) printf("Error: victory_music.mp3 not found!\n");
+    if (!hoverSound) printf("Error: hover.wav not found!\n");
+    if (!clickSound) printf("Error: click.mp3 not found!\n");
 
     return true;
 }
