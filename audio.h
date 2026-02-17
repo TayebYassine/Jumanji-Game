@@ -8,6 +8,8 @@ bool initializeSounds();
 
 void refreshBackgroundMusic();
 
+void triggerHoverSound();
+
 void triggerClickSound();
 
 void cleanupAudio();

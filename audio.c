@@ -8,6 +8,7 @@ bool initializeSounds() {
     mainTheme = Mix_LoadMUS("sounds/menu_music.mp3");
     optionsTheme = Mix_LoadMUS("sounds/options_music.mp3");
     victoryTheme = Mix_LoadMUS("sounds/victory_music.mp3");
+    hoverSound = Mix_LoadWAV("sounds/hover.wav");
     clickSound = Mix_LoadWAV("sounds/click.mp3");
 
     if (mainTheme) {
@@ -18,6 +19,7 @@ bool initializeSounds() {
 
     if (!optionsTheme) printf("Error: options_music.mp3 not found!");
     if (!victoryTheme) printf("Error: victory_music.mp3 not found!");
+    if (!hoverSound) printf("Error: hover.wav not found!");
     if (!clickSound) printf("Error: click.mp3 not found!");
 
     return true;
@@ -58,6 +60,12 @@ void refreshBackgroundMusic() {
         }
     }
 }
+
+// Play hover sound effect
+void triggerHoverSound() {
+    if (hoverSound) Mix_PlayChannel(-1, hoverSound, 0);
+}
+
 
 // Play click sound effect
 void triggerClickSound() {

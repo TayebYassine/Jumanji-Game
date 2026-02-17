@@ -29,7 +29,7 @@ void updateButtonHover(MenuButton *buttons[], int count, int mouseX, int mouseY)
 
     // Play hover sound only when we start hovering a NEW button
     if (currentlyHovered != NULL && currentlyHovered != lastHoveredButton) {
-        // triggerHoverSound();
+        triggerHoverSound();
     }
 
     // Update the last hovered button
@@ -186,7 +186,7 @@ void drawTypingText(const char *text, int x, int y, SDL_Color textColor, bool us
                     int delayMs) {
     if (!normalFont || !gameRenderer || !text) return;
 
-    static char buffer[256];
+    char buffer[256];
     int len = strlen(text);
 
     // Calculate how many letters to show

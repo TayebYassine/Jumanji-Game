@@ -12,7 +12,7 @@
 #include <stdlib.h>
 
 // Handle main menu events
-static void handleMainMenuEvents(MenuButton *buttons[]) {
+void handleMainMenuEvents(MenuButton *buttons[]) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
