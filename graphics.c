@@ -36,19 +36,122 @@ void updateButtonHover(MenuButton *buttons[], int count, int mouseX, int mouseY)
     lastHoveredButton = anyHovered ? currentlyHovered : NULL;
 }
 
-// Render a button with hover effects
+void renderFilledCircle(SDL_Renderer *renderer, int cx, int cy, int radius) {
+    for (int w = 0; w <= radius * 2; w++) {
+        for (int h = 0; h <= radius * 2; h++) {
+            int dx = radius - w;
+            int dy = radius - h;
+            if ((dx * dx + dy * dy) <= (radius * radius)) {
+                SDL_RenderDrawPoint(renderer, cx + dx, cy + dy);
+            }
+        }
+    }
+}
+
+void renderRoundedRect(SDL_Renderer *renderer, SDL_Rect *rect, int radius, SDL_Color color) {
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+
+    // Clamp radius to half the smaller dimension
+    int maxRadius = (rect->w < rect->h ? rect->w : rect->h) / 2;
+    if (radius > maxRadius) radius = maxRadius;
+
+    // Fill center rectangles
+    SDL_Rect centerRect = {
+        rect->x + radius,
+        rect->y,
+        rect->w - radius * 2,
+        rect->h
+    };
+    SDL_RenderFillRect(renderer, &centerRect);
+
+    SDL_Rect sideRect = {
+        rect->x,
+        rect->y + radius,
+        rect->w,
+        rect->h - radius * 2
+    };
+    SDL_RenderFillRect(renderer, &sideRect);
+
+    // Fill corner circles
+    renderFilledCircle(renderer, rect->x + radius, rect->y + radius, radius);
+    renderFilledCircle(renderer, rect->x + rect->w - radius - 1, rect->y + radius, radius);
+    renderFilledCircle(renderer, rect->x + radius, rect->y + rect->h - radius - 1, radius);
+    renderFilledCircle(renderer, rect->x + rect->w - radius - 1, rect->y + rect->h - radius - 1, radius);
+}
+
+void renderRoundedBorder(SDL_Renderer *renderer, SDL_Rect *rect, int radius, SDL_Color color) {
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+
+    int maxRadius = (rect->w < rect->h ? rect->w : rect->h) / 2;
+    if (radius > maxRadius) radius = maxRadius;
+
+    // Draw straight line segments
+    // Top and bottom
+    for (int x = rect->x + radius; x < rect->x + rect->w - radius; x++) {
+        SDL_RenderDrawPoint(renderer, x, rect->y);
+        SDL_RenderDrawPoint(renderer, x, rect->y + rect->h - 1);
+    }
+    // Left and right
+    for (int y = rect->y + radius; y < rect->y + rect->h - radius; y++) {
+        SDL_RenderDrawPoint(renderer, rect->x, y);
+        SDL_RenderDrawPoint(renderer, rect->x + rect->w - 1, y);
+    }
+
+    // Draw corner arcs (using Bresenham-like approach for cleaner lines)
+    int cx[4] = {rect->x + radius, rect->x + rect->w - radius - 1,
+                 rect->x + radius, rect->x + rect->w - radius - 1};
+    int cy[4] = {rect->y + radius, rect->y + radius,
+                 rect->y + rect->h - radius - 1, rect->y + rect->h - radius - 1};
+    int startAngles[4] = {180, 270, 90, 0};
+
+    for (int i = 0; i < 4; i++) {
+        int x = radius;
+        int y = 0;
+        int err = 0;
+
+        while (x >= y) {
+            // Draw arc points based on quadrant
+            switch(i) {
+                case 0: // Top-left
+                    SDL_RenderDrawPoint(renderer, cx[i] - x, cy[i] - y);
+                    SDL_RenderDrawPoint(renderer, cx[i] - y, cy[i] - x);
+                    break;
+                case 1: // Top-right
+                    SDL_RenderDrawPoint(renderer, cx[i] + x, cy[i] - y);
+                    SDL_RenderDrawPoint(renderer, cx[i] + y, cy[i] - x);
+                    break;
+                case 2: // Bottom-left
+                    SDL_RenderDrawPoint(renderer, cx[i] - x, cy[i] + y);
+                    SDL_RenderDrawPoint(renderer, cx[i] - y, cy[i] + x);
+                    break;
+                case 3: // Bottom-right
+                    SDL_RenderDrawPoint(renderer, cx[i] + x, cy[i] + y);
+                    SDL_RenderDrawPoint(renderer, cx[i] + y, cy[i] + x);
+                    break;
+            }
+            y++;
+            err += 1 + 2*y;
+            if (2*(err-x) + 1 > 0) {
+                x--;
+                err += 1 - 2*x;
+            }
+        }
+    }
+}
+
 void renderButton(MenuButton *btn) {
     if (!gameRenderer) return;
 
     SDL_Color borderColor = btn->isHovered ? (SDL_Color){255, 215, 0, 255} : (SDL_Color){255, 255, 255, 255};
-
     SDL_Color fillColor = btn->isHovered ? (SDL_Color){150, 100, 50, 200} : (SDL_Color){0, 0, 0, 150};
 
-    SDL_SetRenderDrawColor(gameRenderer, fillColor.r, fillColor.g, fillColor.b, fillColor.a);
-    SDL_RenderFillRect(gameRenderer, &btn->bounds);
+    int cornerRadius = 8; // Adjust this for more/less rounding
 
-    SDL_SetRenderDrawColor(gameRenderer, borderColor.r, borderColor.g, borderColor.b, borderColor.a);
-    SDL_RenderDrawRect(gameRenderer, &btn->bounds);
+    // Fill rounded rectangle
+    renderRoundedRect(gameRenderer, &btn->bounds, cornerRadius, fillColor);
+
+    // Draw rounded border
+    renderRoundedBorder(gameRenderer, &btn->bounds, cornerRadius, borderColor);
 
     if (normalFont) {
         SDL_Color textColor = btn->isHovered ? colorGold : colorWhite;

@@ -116,10 +116,10 @@ void displayMainMenu() {
     int btnY = 280;
     int btnSpacing = 80;
 
-    MenuButton playButton = {{btnX, btnY, 220, 60}, "JOUER", false};
-    MenuButton optionsButton = {{btnX, btnY + btnSpacing, 220, 60}, "OPTIONS", false};
-    MenuButton scoresButton = {{btnX, btnY + btnSpacing * 2, 220, 60}, "MEILLEURS SCORES", false};
-    MenuButton storyButton = {{btnX, btnY + btnSpacing * 3, 220, 60}, "HISTOIRE", false};
+    MenuButton playButton = {{btnX, btnY, 240, 60}, "JOUER", false};
+    MenuButton optionsButton = {{btnX, btnY + btnSpacing, 240, 60}, "OPTIONS", false};
+    MenuButton scoresButton = {{btnX, btnY + btnSpacing * 2, 240, 60}, "TOP SCORES", false};
+    MenuButton storyButton = {{btnX, btnY + btnSpacing * 3, 240, 60}, "HISTOIRE", false};
     MenuButton quitButton = {{750, 650, 200, 60}, "QUITTER", false};
 
     MenuButton *allButtons[] = {&playButton, &optionsButton, &scoresButton, &storyButton, &quitButton};

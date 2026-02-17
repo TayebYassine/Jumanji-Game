@@ -7,6 +7,8 @@
 // Button rendering and interaction
 bool isButtonHovered(MenuButton *btn, int mouseX, int mouseY);
 
+void renderRoundedBorder(SDL_Renderer *renderer, SDL_Rect *rect, int radius, SDL_Color color);
+
 void renderButton(MenuButton *btn);
 
 void updateButtonHover(MenuButton *buttons[], int count, int mouseX, int mouseY);
